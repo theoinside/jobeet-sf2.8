@@ -1,0 +1,24 @@
+app_bundle_job_index:
+    path: /
+    defaults: { _controller: AppBundle:Job:index }
+    methods: [GET]
+
+app_bundle_job_new:
+    path: /new
+    defaults: { _controller: AppBundle:Job:new }
+    methods: [GET, POST]
+
+app_bundle_job_show:
+    path: /{id}
+    defaults: { _controller: AppBundle:Job:show }
+    methods: [GET]
+
+app_bundle_job_edit:
+    path: /{id}/edit
+    defaults: { _controller: AppBundle:Job:edit }
+    methods: [GET, POST]
+
+app_bundle_job_delete:
+    path: /{id}
+    defaults: { _controller: AppBundle:Job:delete }
+    methods: [DELETE]
