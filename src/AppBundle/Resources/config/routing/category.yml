@@ -1,0 +1,4 @@
+app_bundle_category_show:
+    path: /{slug}
+    defaults: { _controller: AppBundle:Category:show, page: 1 }
+    methods: [GET]

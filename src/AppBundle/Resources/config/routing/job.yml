@@ -9,7 +9,7 @@ app_bundle_job_new:
     methods: [GET, POST]
 
 app_bundle_job_show:
-    path: /{id}
+    path: /{company}/{location}/{id}/{position}
     defaults: { _controller: AppBundle:Job:show }
     methods: [GET]
 

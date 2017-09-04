@@ -2,18 +2,16 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Category;
+use AppBundle\Entity\CategoryRepository;
 use AppBundle\Entity\Job;
 use AppBundle\Form\JobType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Job controller.
- *
- * @Route("job")
- */
 class JobController extends Controller
 {
     /**
@@ -22,12 +20,19 @@ class JobController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
+        /** @var CategoryRepository $categoryRepository */
+        $categoryRepository = $em->getRepository('AppBundle:Category');
+        $categories = $categoryRepository->getWithJobs();
 
-        $jobs = $em->getRepository('AppBundle:Job')->findAll();
+        foreach ($categories as $category) {
+            /** @var Category $category */
+            $category->setMoreJobs($em->getRepository('AppBundle:Job')->countActiveJobs($category->getId()) - $this->container->getParameter('max_jobs_on_homepage'));
 
-        return $this->render('AppBundle:Job:index.html.twig', array(
-            'jobs' => $jobs,
-        ));
+        }
+
+        return $this->render('AppBundle:Job:index.html.twig', [
+            'categories' => $categories,
+        ]);
     }
 
     /**

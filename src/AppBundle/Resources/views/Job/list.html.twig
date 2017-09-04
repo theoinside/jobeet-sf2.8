@@ -1,0 +1,14 @@
+{% set jobs = (jobs is defined) ? jobs : [] %}
+<table class="jobs">
+    {% for job in jobs %}
+        <tr class="{{ cycle(['even', 'odd'], loop.index) }}">
+            <td class="location">{{ job.location }}</td>
+            <td class="position">
+                <a href="{{ path('app_bundle_job_show', { 'id': job.id, 'company': job.companyslug, 'location': job.locationslug, 'position': job.positionslug }) }}">
+                    {{ job.position }}
+                </a>
+            </td>
+            <td class="company">{{ job.company }}</td>
+        </tr>
+    {% endfor %}
+</table>

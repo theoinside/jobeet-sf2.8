@@ -2,13 +2,14 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Utils\Jobeet;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity()
  * @ORM\Table(name="category")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\CategoryRepository")
  */
 class Category
 {
@@ -35,6 +36,15 @@ class Category
      * @ORM\ManyToMany(targetEntity="Affiliate", mappedBy="categories")
      */
     private $affiliates;
+
+    private $activeJobs;
+
+    private $moreJobs;
+
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $slug;
 
     /**
      * Constructor
@@ -64,6 +74,7 @@ class Category
     public function setName($name)
     {
         $this->name = $name;
+        $this->setSlug(Jobeet::slugify($this->getName()));
 
         return $this;
     }
@@ -149,4 +160,46 @@ class Category
     {
         return $this->getName();
     }
+
+    public function setActiveJobs($jobs)
+    {
+       $this->activeJobs = $jobs;
+    }
+
+    public function getActiveJobs()
+    {
+        return $this->activeJobs;
+    }
+//
+//    public function getSlug()
+//    {
+//        return Jobeet::slugify($this->getName());
+//    }
+
+    public function setMoreJobs($jobs)
+    {
+        $this->moreJobs = $jobs >=  0 ? $jobs : 0;
+    }
+
+    public function getMoreJobs()
+    {
+        return $this->moreJobs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
 }
+

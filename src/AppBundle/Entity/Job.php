@@ -2,13 +2,15 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Utils\Jobeet;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\JobRepository")
  * @ORM\Table(name="job")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Job
 {
@@ -492,5 +494,34 @@ class Job
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setExpiresAtValue()
+    {
+        if (!$this->getExpiresAt()) {
+            $now = $this->getCreatedAt() ? $this->getCreatedAt()->format('U') : time();
+            $this->expiresAt = new \DateTime(date('Y-m-d H:i:s', $now + 86400 * 30));
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompanySlug()
+    {
+        return Jobeet::slugify($this->getCompany());
+    }
+
+    public function getPositionSlug()
+    {
+        return Jobeet::slugify($this->getPosition());
+    }
+
+    public function getLocationSlug()
+    {
+        return Jobeet::slugify($this->getLocation());
     }
 }
